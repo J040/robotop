@@ -1,12 +1,8 @@
 package quemmeatirarehgay;
 
 import combat.Enemy;
-import robocode.HitRobotEvent;
-import robocode.Robot;
 import robocode.ScannedRobotEvent;
-import robocode.HitByBulletEvent;
 import robocode.HitWallEvent;
-import robocode.RateControlRobot;
 import robocode.*;
 
 import java.awt.*;
@@ -26,9 +22,8 @@ public class QuemMeAtirarEhGay extends AdvancedRobot {
 
     public void onScannedRobot(ScannedRobotEvent e) {
         this.registerRobot(e);
-        Enemy enemy = getCloserEnemy();
-        this.dodge(enemy);
-        this.trackFire(enemy);
+        this.dodge(enemies.get(e.getName()));
+        this.trackFire(getCloserEnemy());
     }
     
     @Override
@@ -78,17 +73,14 @@ public class QuemMeAtirarEhGay extends AdvancedRobot {
             e.getHeading()
         );
         if (enemies.containsKey(e.getName()))
-            enemies.replace(e.getName(), enemy);
+            enemies.get(e.getName()).update(e);            
         else
-            enemies.get(e.getName()).update(e);
+            enemies.put(e.getName(), enemy);
     }
     
     /* Movement */
     public Boolean dodge(Enemy e) {
-        // Stay at right angles to the opponent
         setTurnRight(e.getBearing() + 90 - 30 * movementDirection);
-
-        // If the bot has small energy drop, assume it fired
         double previousEnergy = e.getLastEnergy();
         double changeInEnergy = previousEnergy - e.getEnergy();        
         if (changeInEnergy > 0 && changeInEnergy <= 3) {

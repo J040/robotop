@@ -7,11 +7,7 @@ package combat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Stack;
-import robocode.AdvancedRobot;
 import robocode.ScannedRobotEvent;
-import sun.misc.Queue;
 
 /**
  *
@@ -79,25 +75,25 @@ public class Enemy {
     }
     
     public void addEnergy(Double energy) {
-        energies.add(energy);
+        energies.add(0, energy);
         if(energies.size() > MAX_REG)
             energies.remove(MAX_REG - 1);
     }
     
     public void addVelocity(Double velocity) {
-        velocities.add(velocity);
+        velocities.add(0, velocity);
         if(velocities.size() > MAX_REG)
             velocities.remove(MAX_REG - 1);
     }
     
     public void addBearing(Double bearing) {
-        bearings.add(bearing);
+        bearings.add(0, bearing);
         if(bearings.size() > MAX_REG)
             bearings.remove(MAX_REG - 1);
     }      
     
     public void addHeading(Double heading) {
-        headings.add(heading);
+        headings.add(0, heading);
         if(headings.size() > MAX_REG)
             headings.remove(MAX_REG - 1);
     }        
