@@ -8,6 +8,7 @@ package combat;
 import java.util.ArrayList;
 import java.util.List;
 import robocode.ScannedRobotEvent;
+import utils.Coordinate;
 
 /**
  *
@@ -23,8 +24,9 @@ public class Enemy {
     public List<Double> velocities = new ArrayList<>();
     public List<Double> bearings = new ArrayList<>();    
     public List<Double> headings = new ArrayList<>();
+    public List<Coordinate> positions = new ArrayList<>();
     
-    public Enemy(String name, Double energy, Double distance, Double velocity, Double bearing, Double heading) {        
+    public Enemy(String name, Double energy, Double distance, Double velocity, Double bearing, Double heading, Coordinate position) {
         this.name = name;
         this.distance = distance;
         
@@ -32,13 +34,15 @@ public class Enemy {
         velocities.add(velocity);
         bearings.add(bearing);
         headings.add(heading);
+        positions.add(position);
     }
     
-    public void update(ScannedRobotEvent robot) {
+    public void update(ScannedRobotEvent robot, Coordinate c) {
         addEnergy(robot.getEnergy());
         addVelocity(robot.getVelocity());
         addBearing(robot.getBearing());
         addHeading(robot.getHeading());
+        positions.add(new Coordinate(robot, c.x, c.y));
         this.distance = robot.getDistance();
     }
     
@@ -72,6 +76,14 @@ public class Enemy {
     
     public Double getLastHeading() {
         return this.headings.get(1);
+    }
+    
+    public Coordinate getPosition() {
+        return this.positions.get(0);
+    }
+    
+    public Coordinate getLastPosition() {
+        return this.positions.get(1);
     }
     
     public void addEnergy(Double energy) {        
