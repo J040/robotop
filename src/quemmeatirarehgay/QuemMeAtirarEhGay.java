@@ -79,7 +79,10 @@ public class QuemMeAtirarEhGay extends AdvancedRobot {
     }
     
     /* Movement */
-    public Boolean dodge(Enemy e) {
+    public Boolean dodge(Enemy e) {        
+        if(e.energies.size() < 2)
+            return false;
+        System.out.println(e.getEnergy() + " -> " + e.getLastEnergy());
         setTurnRight(e.getBearing() + 90 - 30 * movementDirection);
         double previousEnergy = e.getLastEnergy();
         double changeInEnergy = previousEnergy - e.getEnergy();        
