@@ -90,9 +90,7 @@ public class Intercept {
         return Math.sqrt(dX * dX + dY * dY) - vb * time;
     }
 
-    private double getImpactTime(double t0,
-            double t1, double accuracy) {
-
+    private double getImpactTime(double t0, double t1, double accuracy) {
         double X = t1;
         double lastX = t0;
         int iterationCount = 0;

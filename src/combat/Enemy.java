@@ -26,16 +26,20 @@ public class Enemy {
     public List<Double> energies = new ArrayList<>();
     public List<Double> velocities = new ArrayList<>();
     public List<Double> bearings = new ArrayList<>();    
+    public List<Double> bearingsRadians = new ArrayList<>();
     public List<Double> headings = new ArrayList<>();
+    public List<Double> headingsRadians = new ArrayList<>();
     public List<Coordinate> positions = new ArrayList<>();
     
-    public Enemy(String name, Double energy, Double distance, Double velocity, Double bearing, Double heading, Coordinate position) {
+    public Enemy(String name, Double energy, Double distance, Double velocity, Double bearing, Double bearingRadians, Double heading, Double headingRadians, Coordinate position) {
         this.name = name;
         this.distance = distance;
         energies.add(energy);
         velocities.add(velocity);
         bearings.add(bearing);
+        bearingsRadians.add(bearingRadians);
         headings.add(heading);
+        headingsRadians.add(headingRadians);
         positions.add(position);
     }
     
@@ -73,12 +77,28 @@ public class Enemy {
         return this.bearings.get(1);
     }
     
+    public Double getBearingRadians() {
+        return this.bearingsRadians.get(0);
+    }
+    
+    public Double getLastBearingRadians() {
+        return this.bearingsRadians.get(1);
+    }
+    
     public Double getHeading() {
         return this.headings.get(0);
     }
     
     public Double getLastHeading() {
         return this.headings.get(1);
+    }
+    
+    public Double getHeadingRadians() {
+        return this.headingsRadians.get(0);
+    }
+    
+    public Double getLastHeadingRadians() {
+        return this.headingsRadians.get(1);
     }
     
     public Coordinate getPosition() {
@@ -107,9 +127,21 @@ public class Enemy {
             bearings.remove(MAX_REG);
     }      
     
+    public void addBearingRadians(Double radians) {
+        bearingsRadians.add(0, radians);
+        if(bearingsRadians.size() > MAX_REG)
+            bearingsRadians.remove(MAX_REG);
+    }
+    
     public void addHeading(Double heading) {
         headings.add(0, heading);
         if(headings.size() > MAX_REG)
             headings.remove(MAX_REG);
+    }
+    
+    public void addHeadingRadians(Double radians) {
+        headingsRadians.add(0, radians);
+        if(headingsRadians.size() > MAX_REG)
+            headingsRadians.remove(MAX_REG);
     }        
 }
