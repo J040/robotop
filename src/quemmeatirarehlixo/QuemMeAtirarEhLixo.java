@@ -31,8 +31,9 @@ public class QuemMeAtirarEhLixo extends AdvancedRobot {
         this.dodge(enemies.get(e.getName()));
 
         Enemy enemy = getCloserEnemy();
-        //if(enemy.distance <= 1000) {
+        if(enemy.distance <= 600 || enemy.isStopped()) {
             this.trackFire(enemy);
+        }
 //        } else {
 //            this.predict(enemy);
 //        }
@@ -48,9 +49,9 @@ public class QuemMeAtirarEhLixo extends AdvancedRobot {
     public void onHitWall(HitWallEvent e) {
         double bearing = Math.abs(e.getBearing());
         if (bearing >= 0 && bearing <= 90) {
-            back(20);
+            back(150);
         } else {
-            ahead(20);
+            ahead(150);
         }
     }
 
@@ -93,19 +94,19 @@ public class QuemMeAtirarEhLixo extends AdvancedRobot {
         return closer.getValue();
     }
 
-//    public Enemy getEnemyByAgressiveness() {
-//        TargetSelector ts = new TargetSelector();
-//        Enemy enemy = null;
-//        Double agressiveness = 0.0;
-//        for(Map.Entry<String, Enemy> e : enemies.entrySet()) {
-//            Double temp = ts.resolve(e.getValue(), this.getEnergy());
-//            if(temp > agressiveness) {
-//                enemy = e.getValue();
-//                agressiveness = temp;
-//            }
-//        }
-//        return enemy;
-//    }
+    public Enemy getEnemyByAgressiveness() {
+        TargetSelector ts = new TargetSelector();
+        Enemy enemy = null;
+        Double agressiveness = 0.0;
+        for(Map.Entry<String, Enemy> e : enemies.entrySet()) {
+            Double temp = ts.resolve(e.getValue(), this.getEnergy());
+            if(temp > agressiveness) {
+                enemy = e.getValue();
+                agressiveness = temp;
+            }
+        }
+        return enemy;
+    }
 
     /* Scan */
     public void registerRobot(ScannedRobotEvent e) {
@@ -132,12 +133,12 @@ public class QuemMeAtirarEhLixo extends AdvancedRobot {
         if (e.energies.size() < 2) {
             return false;
         }
-        setTurnRight(e.getBearing() + 105 - 30 * movementDirection); // 90
+        setTurnRight(e.getBearing() + 90 - 30 * movementDirection); // 90 - 30
         double previousEnergy = e.getLastEnergy();
         double changeInEnergy = previousEnergy - e.getEnergy();
         if (changeInEnergy > 0 && changeInEnergy <= 3) {
             movementDirection = -movementDirection;
-            setAhead((e.distance / 4 + 50) / movementDirection); // 25
+            setAhead((e.distance / 4 + 25) / movementDirection); // 4 + 25
             return true;
         }
         return false;

@@ -48,7 +48,10 @@ public class Enemy {
         addVelocity(robot.getVelocity());
         addBearing(robot.getBearing());
         addHeading(robot.getHeading());
+        
         positions.add(0, new Coordinate(robot, c.x, c.y));
+        if(positions.size() > MAX_REG)
+            positions.remove(MAX_REG);
                 
         this.distance = robot.getDistance();
     }
@@ -143,5 +146,20 @@ public class Enemy {
         headingsRadians.add(0, radians);
         if(headingsRadians.size() > MAX_REG)
             headingsRadians.remove(MAX_REG);
-    }        
+    }
+    
+    public Boolean isStopped() {
+        for(int i = 1; i < positions.size(); i++) {
+//            if(
+//                (positions.get(i).x != positions.get(i - 1).x &&
+//                Math.abs(positions.get(i).x - positions.get(i - 1).x) >= 15)
+//                    ||
+//                (positions.get(i).y != positions.get(i - 1).y &&
+//                Math.abs(positions.get(i).y - positions.get(i - 1).y) >= 15)
+//              )
+            if(positions.get(i).x != positions.get(i - 1).x || positions.get(i).y != positions.get(i - 1).y)
+                return false;
+        }
+        return true;
+    }
 }
