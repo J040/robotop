@@ -2,6 +2,7 @@ package quemmeatirarehgay;
 
 import combat.Enemy;
 import combat.Intercept;
+import combat.TargetSelector;
 import robocode.ScannedRobotEvent;
 import robocode.HitWallEvent;
 import robocode.*;
@@ -18,6 +19,8 @@ public class QuemMeAtirarEhGay extends AdvancedRobot {
     Map<String, Enemy> enemies = new HashMap<String, Enemy>();
     int movementDirection = 1;
     int c = 0;
+    String lastTarget;
+    Intercept intercept = new Intercept();
 
     public void run() {
         initialConfig();
@@ -25,9 +28,12 @@ public class QuemMeAtirarEhGay extends AdvancedRobot {
 
     public void onScannedRobot(ScannedRobotEvent e) {
         this.registerRobot(e);
-        this.dodge(enemies.get(e.getName()));        
-        this.trackFire(getCloserEnemy());
-        //this.predict(getCloserEnemy());
+        this.dodge(enemies.get(e.getName()));
+        
+        Enemy enemy = getCloserEnemy();
+        //this.trackFire(enemy);
+        this.predict(enemy);
+        lastTarget = enemy.name;
     }
 
     @Override
@@ -44,6 +50,21 @@ public class QuemMeAtirarEhGay extends AdvancedRobot {
             ahead(20);
     }
 
+    @Override
+    public void onBulletHit(BulletHitEvent e) {
+        enemies.get(e.getName()).hitted++;
+    }
+
+    @Override
+    public void onBulletMissed(BulletMissedEvent e) {
+        enemies.get(lastTarget).dodges++;
+    }
+
+    @Override
+    public void onHitByBullet(HitByBulletEvent e) {
+        enemies.get(e.getName()).damageDealt += e.getBullet().getPower();
+    }
+    
     /* Utilitary Functions */
     public void initialConfig() {
         // Colors
@@ -67,11 +88,25 @@ public class QuemMeAtirarEhGay extends AdvancedRobot {
         }
         return closer.getValue();
     }
+    
+    public Enemy getEnemyByAgressiveness() {
+        TargetSelector ts = new TargetSelector();
+        Enemy enemy = null;
+        Double agressiveness = 0.0;
+        for(Map.Entry<String, Enemy> e : enemies.entrySet()) {
+            Double temp = ts.resolve(e.getValue(), this.getEnergy());
+            if(temp > agressiveness) {
+                enemy = e.getValue();
+                agressiveness = temp;
+            }
+        }
+        return enemy;
+    }
 
     /* Scan */
     public void registerRobot(ScannedRobotEvent e) {                
         Enemy enemy = new Enemy(
-                e.getName(),
+                e.getName(),                
                 e.getEnergy(),
                 e.getDistance(),
                 e.getVelocity(),
@@ -122,8 +157,7 @@ public class QuemMeAtirarEhGay extends AdvancedRobot {
     public void predict(Enemy e) {
         double absoluteBearing = getHeading() + e.getBearing();
         double bearingFromGun = normalRelativeAngleDegrees(absoluteBearing - getGunHeading());
-        double bulletPower = Math.min(3 - Math.abs(bearingFromGun), getEnergy() - .1);
-        Intercept intercept = new Intercept();
+        double bulletPower = Math.min(3 - Math.abs(bearingFromGun), getEnergy() - .1);        
         intercept.calculate(
                 getX(),
                 getY(),
@@ -132,8 +166,8 @@ public class QuemMeAtirarEhGay extends AdvancedRobot {
                 e.getHeading(),
                 e.getVelocity(),
                 bulletPower,
-                0,
-                e.getHeading()
+                getVelocity(),
+                getWidth() / 2
         );
         double turnAngle = normalRelativeAngleDegrees(intercept.bulletHeading_deg - getGunHeading());
         setTurnGunRight(turnAngle);

@@ -5,6 +5,10 @@
  */
 package combat;
 
+import java.util.ArrayList;
+import java.util.List;
+import utils.Coordinate;
+
 /**
  *
  * @author rudson
@@ -12,4 +16,8 @@ package combat;
 public class PathFinder {
     // de acordo com a posição de todos os robôs inimigos, 
     // encontrar uma rota com menos conflitos que minimize a chance de ser atingido
+    
+    public List<Coordinate> path = new ArrayList<Coordinate>();
+    
+    
 }

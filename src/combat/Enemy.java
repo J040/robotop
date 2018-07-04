@@ -19,6 +19,9 @@ public class Enemy {
     
     public String name;
     public Double distance;
+    public Integer dodges = 0;
+    public Integer hitted = 0;
+    public Double damageDealt = 0.0;
     
     public List<Double> energies = new ArrayList<>();
     public List<Double> velocities = new ArrayList<>();
@@ -29,7 +32,6 @@ public class Enemy {
     public Enemy(String name, Double energy, Double distance, Double velocity, Double bearing, Double heading, Coordinate position) {
         this.name = name;
         this.distance = distance;
-        
         energies.add(energy);
         velocities.add(velocity);
         bearings.add(bearing);
@@ -42,7 +44,8 @@ public class Enemy {
         addVelocity(robot.getVelocity());
         addBearing(robot.getBearing());
         addHeading(robot.getHeading());
-        positions.add(new Coordinate(robot, c.x, c.y));
+        positions.add(0, new Coordinate(robot, c.x, c.y));
+                
         this.distance = robot.getDistance();
     }
     
